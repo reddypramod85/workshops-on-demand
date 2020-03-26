@@ -602,13 +602,13 @@ const Route = ({ Component, path }) => {
           <Box align="stretch" justify="center" fill="horizontal" direction="column" flex={true}>
             <Form>
               <FormField label="Name">
-                <TextInput size="large" type="text" value="Pramod Sareddy" />
+                <TextInput size="large" type="text" placeholder="enter your name" />
               </FormField>
               <FormField label="Company">
-                <TextInput type="text" value="HPE" />
+                <TextInput type="text"  placeholder="enter your company name" />
               </FormField>
               <FormField label="Email">
-                <TextInput type="text" value="pramod-reddy.sareddy@hpe.com" />
+                <TextInput type="text" placeholder="enter your email id" />
               </FormField>
               <FormField label="Notebook">
                 <Select options={["Grommet","Nimble","Simplivity","RedFish"]} placeholder="select a notebook" icon={<Book />} closeOnChange={false} multiple={true} />
@@ -640,13 +640,13 @@ const Register = () => {
         <Box align="stretch" justify="start" fill="horizontal" direction="column" flex={true} pad="xsmall">
           <Form>
             <FormField label="Name">
-              <TextInput size="large" type="text" value="Pramod Sareddy" />
+              <TextInput size="large" type="text" placeholder="enter your name" />
             </FormField>
             <FormField label="Company">
-              <TextInput type="text" value="HPE" />
+              <TextInput type="text"  placeholder="enter your company name" />
             </FormField>
             <FormField label="Email">
-              <TextInput type="text" value="pramod-reddy.sareddy@hpe.com" />
+              <TextInput type="text" placeholder="enter your email id" />
             </FormField>
             <FormField label="Notebook">
               <Select options={["Grommet","Nimble","Simplivity","RedFish"]} placeholder="select a notebook" icon={<Book />} closeOnChange={false} multiple={true} />
