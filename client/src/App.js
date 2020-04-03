@@ -568,6 +568,7 @@ class App extends React.Component {
     email: null,
     company: null,
     bookingPeriod: null,
+    bookingPeriodDisable: null,
     notebookList: null,
     nameErr: null,
     emailErr: null,
@@ -575,6 +576,22 @@ class App extends React.Component {
     notebookErr: null,
     bookingErr: null
   };
+
+  componentDidMount() {
+    var today = new Date(),
+      todaysDate =
+        today.getFullYear() +
+        "-" +
+        (today.getMonth() + 1) +
+        "-" +
+        (today.getDate() - 1);
+
+    const bookingPeriodDisable = [];
+    const startdate = ["2000-01-01"];
+    startdate.push(todaysDate);
+    bookingPeriodDisable.push(startdate);
+    this.setState({ bookingPeriodDisable });
+  }
 
   captureName = event => {
     this.setState({ name: event.target.value });
@@ -593,9 +610,6 @@ class App extends React.Component {
   };
 
   handleValidation = () => {
-    let newDate = new Date();
-    let date = newDate.getDate();
-
     let formIsValid = true;
 
     //Name - only letters
@@ -794,6 +808,7 @@ class App extends React.Component {
                     range={true}
                     size="small"
                     required={true}
+                    disabled={this.state.bookingPeriodDisable}
                     animate={false}
                     value={this.state.bookingPeriod}
                     onSelect={this.captureBookingPeriod}
