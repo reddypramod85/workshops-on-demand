@@ -1,62 +1,47 @@
-var express = require('express');
-var router = express.Router();
-var nodemailer = require('nodemailer');
-var cors = require('cors');
-const dotenv = require('dotenv');
+var express = require("express"),
+  router = express.Router(),
+  app = express(),
+  cors = require("cors"),
+  dotenv = require("dotenv"),
+  sgMail = require("@sendgrid/mail");
+
 dotenv.config();
 
 const fromEmailAddress = process.env.FROM_EMAIL_ADDRESS;
 const toEmailAddress = process.env.TO_EMAIL_ADDRESS;
-const smtpHost = process.env.SMTP_HOST
-const smtpPort = process.env.SMTP_PORT
+const sendGridAPIKey = process.env.SENDGRID_API_KEY;
 
+sgMail.setApiKey(sendGridAPIKey);
 
-var transport = {
-    host: smtpHost, // Don’t forget to replace with the SMTP host of your provider
-    port: smtpPort,
-}
+router.post("/sendmail", (req, res, next) => {
+  var name = req.body.name;
+  var email = req.body.email;
+  var company = req.body.company;
+  var notebookList = req.body.notebookList;
+  var bookingPeriod = req.body.bookingPeriod;
 
-var transporter = nodemailer.createTransport(transport)
-
-transporter.verify((error, success) => {
-  if (error) {
-    console.log(error);
-  } else {
-    console.log('Server is ready to take messages');
-  }
-});
-
-router.post('/send', (req, res, next) => {
-  var name = req.body.name
-  var email = req.body.email
-  var company = req.body.company
-  var notebookList = req.body.notebookList
-  var bookingPeriod = req.body.bookingPeriod
-
-  var content = ` Name: ${name}\n Email ID: ${email}\n Company: ${company}\n Notebook List: ${notebookList}\n Booking Period: ${bookingPeriod}\n `
+  var content = ` Name: ${name}\n Email ID: ${email}\n Company: ${company}\n Notebook List: ${notebookList}\n Booking Period: ${bookingPeriod}\n `;
 
   var mail = {
     from: fromEmailAddress,
-    to: toEmailAddress,  // Change to email address that you want to receive messages on
+    to: toEmailAddress, // Change to email address that you want to receive messages on
     subject: `New notebooks booking request from ${name}`,
     text: content
-  }
+  };
 
-  transporter.sendMail(mail, (err, data) => {
+  sgMail.send(mail, (err, data) => {
     if (err) {
-      res.json({
-        status: 'fail'
-      })
+      res.send("fail");
     } else {
-      res.json({
-       status: 'success'
-      })
+      res.send("success");
     }
-  })
-})
+  });
+});
 
-const app = express()
-app.use(cors())
-app.use(express.json())
-app.use('/', router)
-app.listen(3002)
+app.use(cors());
+app.use(express.json());
+app.use("/", router);
+const PORT = process.env.PORT || 3010;
+app.listen(PORT, function() {
+  console.log("Node.js server is running on port " + PORT);
+});

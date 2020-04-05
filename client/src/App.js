@@ -564,17 +564,17 @@ const theme = {
 
 class App extends React.Component {
   state = {
-    name: null,
-    email: null,
-    company: null,
-    bookingPeriod: null,
-    bookingPeriodDisable: null,
-    notebookList: null,
-    nameErr: null,
-    emailErr: null,
-    companyErr: null,
-    notebookErr: null,
-    bookingErr: null
+    name: "",
+    email: "",
+    company: "",
+    bookingPeriod: "",
+    bookingPeriodDisable: [],
+    notebookList: "",
+    nameErr: "",
+    emailErr: "",
+    companyErr: "",
+    notebookErr: "",
+    bookingErr: ""
   };
 
   componentDidMount() {
@@ -642,7 +642,7 @@ class App extends React.Component {
         !(
           lastAtPos < lastDotPos &&
           lastAtPos > 0 &&
-          email.indexOf("@@") == -1 &&
+          email.indexOf("@@") === -1 &&
           lastDotPos > 2 &&
           email.length - lastDotPos > 2
         )
@@ -685,13 +685,13 @@ class App extends React.Component {
     if (this.handleValidation()) {
       axios({
         method: "POST",
-        url: "http://localhost:3002/send",
+        url: "http://localhost:3002/sendmail",
         data: this.state
       }).then(response => {
-        if (response.data.status === "success") {
+        if (response.data === "success") {
           alert("Message Sent.");
           this.resetForm();
-        } else if (response.data.status === "fail") {
+        } else if (response.data === "fail") {
           alert("Message failed to send.");
         }
       });
@@ -706,6 +706,7 @@ class App extends React.Component {
       email: "",
       company: "",
       bookingPeriod: "",
+      bookingPeriodDisable: [],
       notebookList: "",
       nameErr: "",
       emailErr: "",
@@ -793,12 +794,13 @@ class App extends React.Component {
                 <FormField label="Workshops" error={this.state.notebookErr}>
                   <Select
                     options={["Grommet", "Nimble", "Simplivity", "RedFish"]}
-                    required={true}
+                    //required={true}
                     placeholder="select a workshop(s)"
                     icon={<Book />}
                     closeOnChange={false}
                     multiple={true}
                     onChange={this.captureNotebook}
+                    value={this.state.notebookList}
                     messages={{ multiple: this.state.notebookList }}
                   />
                 </FormField>
