@@ -801,7 +801,7 @@ function App() {
                   required={true}
                   disabled={bookingPeriodDisable}
                   animate={false}
-                  value={bookingPeriod}
+                  //value={bookingPeriod}
                   onSelect={event => setBookingPeriod(event)}
                 />
               </FormField>
