@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Grommet,
   Box,
@@ -562,135 +562,139 @@ const theme = {
   }
 };
 
-class App extends React.Component {
-  state = {
-    name: "",
-    email: "",
-    company: "",
-    bookingPeriod: "",
-    bookingPeriodDisable: [],
-    notebookList: "",
-    nameErr: "",
-    emailErr: "",
-    companyErr: "",
-    notebookErr: "",
-    bookingErr: ""
+const options = ["Grommet", "Nimble", "Simplivity", "RedFish"];
+
+function App() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [company, setCompany] = useState("");
+  const [bookingPeriod, setBookingPeriod] = useState("");
+  const [bookingPeriodDisable, setBookingPeriodDisable] = useState([]);
+  const [notebookList, setNotebookList] = useState([]);
+  const [nameErr, setNameErr] = useState("");
+  const [emailErr, setEmailErr] = useState("");
+  const [companyErr, setCompanyErr] = useState("");
+  const [notebookErr, setNotebookErr] = useState("");
+  const [bookingErr, setBookingErr] = useState("");
+
+  const clearState = () => {
+    setName("");
+    setEmail("");
+    setCompany("");
+    setBookingPeriod("");
+    setBookingPeriodDisable([]);
+    setNotebookList([]);
+    setNameErr("");
+    setEmailErr("");
+    setCompanyErr("");
+    setNotebookErr("");
+    setBookingErr("");
   };
 
-  componentDidMount() {
-    var today = new Date(),
-      todaysDate =
-        today.getFullYear() +
-        "-" +
-        (today.getMonth() + 1) +
-        "-" +
-        (today.getDate() - 1);
+  useEffect(() => {
+    // code to run on component mount
+    const blockPreviousDates = () => {
+      var today = new Date(),
+        todaysDate =
+          today.getFullYear() +
+          "-" +
+          (today.getMonth() + 1) +
+          "-" +
+          (today.getDate() - 1);
 
-    const bookingPeriodDisable = [];
-    const startdate = ["2000-01-01"];
-    startdate.push(todaysDate);
-    bookingPeriodDisable.push(startdate);
-    this.setState({ bookingPeriodDisable });
-  }
+      const startdate = ["2000-01-01"];
+      startdate.push(todaysDate);
+      bookingPeriodDisable.push(startdate);
+      setBookingPeriodDisable(bookingPeriodDisable);
+    };
+    blockPreviousDates();
+  });
 
-  captureName = event => {
-    this.setState({ name: event.target.value });
-  };
-  captureEmail = event => {
-    this.setState({ email: event.target.value });
-  };
-  captureCompany = event => {
-    this.setState({ company: event.target.value });
-  };
-  captureNotebook = event => {
-    this.setState({ notebookList: event.value.toString() });
-  };
-  captureBookingPeriod = event => {
-    this.setState({ bookingPeriod: event });
-  };
-
-  handleValidation = () => {
+  const handleValidation = () => {
     let formIsValid = true;
 
     //Name - only letters
-    if (typeof this.state.name !== "undefined") {
-      if (!this.state.name.match(/^[a-zA-Z]+$/)) {
+    if (typeof name !== "undefined") {
+      if (!name.match(/^[a-zA-Z]+$/)) {
         formIsValid = false;
-        this.setState({ nameErr: "Only letters" });
+        setNameErr("Only letters");
       } else {
-        this.setState({ nameErr: "" });
+        setNameErr("");
       }
     }
 
     //Company - only letters and spaces
-    if (typeof this.state.company !== "undefined") {
-      if (!this.state.company.match(/^[a-zA-Z\s]+$/)) {
+    if (typeof company !== "undefined") {
+      if (!company.match(/^[a-zA-Z\s]+$/)) {
         formIsValid = false;
-        this.setState({ companyErr: "Only letters and space" });
+        setCompanyErr("Only letters and space");
       } else {
-        this.setState({ companyErr: "" });
+        setCompanyErr("");
       }
     }
 
     //Email
-    if (typeof this.state.email !== "undefined") {
-      const email = this.state.email;
-      let lastAtPos = email.lastIndexOf("@");
-      let lastDotPos = email.lastIndexOf(".");
+    if (typeof email !== "undefined") {
+      const emailtemp = email;
+      let lastAtPos = emailtemp.lastIndexOf("@");
+      let lastDotPos = emailtemp.lastIndexOf(".");
 
       if (
         !(
           lastAtPos < lastDotPos &&
           lastAtPos > 0 &&
-          email.indexOf("@@") === -1 &&
+          emailtemp.indexOf("@@") === -1 &&
           lastDotPos > 2 &&
-          email.length - lastDotPos > 2
+          emailtemp.length - lastDotPos > 2
         )
       ) {
         formIsValid = false;
-        this.setState({ emailErr: "Email is not valid" });
+        setEmailErr("Email is not valid");
       } else {
-        this.setState({ emailErr: "" });
+        setEmailErr("");
       }
     }
 
     //Notebooks List - required
-    if (typeof this.state.notebookList !== "undefined") {
-      if (this.state.notebookList === null || this.state.notebookList === "") {
+    if (typeof notebookList !== "undefined") {
+      if (notebookList === null || notebookList === "") {
         formIsValid = false;
-        this.setState({ notebookErr: "Please fill out this field" });
+        setNotebookErr("Please fill out this field");
       } else {
-        this.setState({ notebookErr: "" });
+        setNotebookErr("");
       }
     }
 
     //Booking Period - required
-    if (typeof this.state.bookingPeriod !== "undefined") {
-      if (
-        this.state.bookingPeriod === null ||
-        this.state.bookingPeriod === ""
-      ) {
+    if (typeof bookingPeriod !== "undefined") {
+      if (bookingPeriod === null || bookingPeriod === "") {
         formIsValid = false;
-        this.setState({ bookingErr: "Please select booking period" });
+        setBookingErr("Please select booking period");
       } else {
-        this.setState({ bookingErr: "" });
+        setBookingErr("");
       }
     }
 
     return formIsValid;
   };
 
-  handleSubmit = e => {
+  const handleSubmit = e => {
     e.preventDefault();
-    if (this.handleValidation()) {
+    if (handleValidation()) {
       axios({
         method: "POST",
         url: "http://localhost:3002/sendmail",
-        data: this.state
+        data: {
+          name,
+          email,
+          company,
+          notebookList,
+          bookingPeriod
+        }
       }).then(response => {
         if (response.data === "success") {
           alert("Message Sent.");
-          this.resetForm();
+          clearState();
         } else if (response.data === "fail") {
           alert("Message failed to send.");
         }
@@ -700,244 +704,228 @@ class App extends React.Component {
       alert("Form has errors.");
     }
   };
-  resetForm() {
-    this.setState({
-      name: "",
-      email: "",
-      company: "",
-      bookingPeriod: "",
-      bookingPeriodDisable: [],
-      notebookList: "",
-      nameErr: "",
-      emailErr: "",
-      companyErr: "",
-      notebookErr: ""
-    });
-  }
 
-  render() {
-    return (
-      <Grommet theme={theme}>
+  return (
+    <Grommet theme={theme}>
+      <Box
+        fill="vertical"
+        overflow="auto"
+        align="center"
+        flex={true}
+        direction="column"
+        justify="start"
+      >
         <Box
-          fill="vertical"
-          overflow="auto"
           align="center"
-          flex={true}
+          justify="center"
+          direction="row-responsive"
+          pad="small"
+          fill="horizontal"
+          gap="medium"
+          flex={false}
+        >
+          <Hpe color="brand" size="large" />
+          <Box align="end" justify="center" direction="column">
+            <Text size="xlarge" weight="bold">
+              Hack Shack Workshops On Demand
+            </Text>
+            <Text weight="bold">powered by HPEDEV</Text>
+          </Box>
+        </Box>
+        <Box
+          align="center"
+          justify="between"
+          direction="row-responsive"
+          background={{ color: "background-front" }}
+          wrap={false}
+          overflow="auto"
+          fill="horizontal"
+          flex="grow"
+          pad="large"
+        >
+          <Box
+            align="stretch"
+            justify="start"
+            fill={true}
+            direction="column"
+            pad="xsmall"
+            flex={true}
+          >
+            <Form onSubmit={handleSubmit}>
+              <FormField label="Name" error={nameErr}>
+                <TextInput
+                  size="large"
+                  type="text"
+                  required={true}
+                  placeholder="enter your name"
+                  value={name}
+                  onChange={event => setName(event.target.value)}
+                />
+              </FormField>
+              <FormField label="Company" error={companyErr}>
+                <TextInput
+                  type="text"
+                  required={true}
+                  placeholder="enter your company name"
+                  value={company}
+                  onChange={event => setCompany(event.target.value)}
+                />
+              </FormField>
+              <FormField label="Email" error={emailErr}>
+                <TextInput
+                  type="text"
+                  required={true}
+                  placeholder="enter your company email"
+                  value={email}
+                  onChange={event => setEmail(event.target.value)}
+                />
+              </FormField>
+              <FormField label="Workshops" error={notebookErr}>
+                <Select
+                  options={options}
+                  //required={true}
+                  placeholder="select a workshop(s)"
+                  icon={<Book />}
+                  closeOnChange={false}
+                  multiple={true}
+                  value={notebookList}
+                  onChange={event => setNotebookList(event.value)}
+                  messages={{ multiple: notebookList.join(",") }}
+                />
+              </FormField>
+              <FormField label="Booking period" error={bookingErr}>
+                <Calendar
+                  daysOfWeek={true}
+                  range={true}
+                  size="small"
+                  required={true}
+                  disabled={bookingPeriodDisable}
+                  animate={false}
+                  value={bookingPeriod}
+                  onSelect={event => setBookingPeriod(event)}
+                />
+              </FormField>
+              <Box
+                align="start"
+                justify="center"
+                direction="row-responsive"
+                gap="medium"
+                pad="small"
+              >
+                <Button
+                  label="Submit"
+                  type="submit"
+                  hoverIndicator={true}
+                  primary={true}
+                  reverse={false}
+                  active={false}
+                />
+              </Box>
+            </Form>
+          </Box>
+          <Box
+            align="center"
+            justify="center"
+            direction="column"
+            fill={true}
+            flex={true}
+            round="medium"
+          >
+            <Image src="/img/gremlin-rockin.svg" />
+          </Box>
+        </Box>
+        <Box
+          align="stretch"
+          justify="center"
           direction="column"
-          justify="start"
+          alignSelf="center"
+          wrap={false}
+          flex={false}
         >
           <Box
             align="center"
             justify="center"
-            direction="row-responsive"
-            pad="small"
-            fill="horizontal"
-            gap="medium"
-            flex={false}
-          >
-            <Hpe color="brand" size="large" />
-            <Box align="end" justify="center" direction="column">
-              <Text size="xlarge" weight="bold">
-                Hack Shack Workshops On Demand
-              </Text>
-              <Text weight="bold">powered by HPEDEV</Text>
-            </Box>
-          </Box>
-          <Box
-            align="center"
-            justify="between"
-            direction="row-responsive"
-            background={{ color: "background-front" }}
+            direction="row"
             wrap={false}
-            overflow="auto"
+            flex={true}
             fill="horizontal"
-            flex="grow"
-            pad="large"
+            pad="medium"
           >
             <Box
-              align="stretch"
-              justify="start"
-              fill={true}
+              align="center"
+              justify="center"
               direction="column"
-              pad="xsmall"
+              wrap={true}
               flex={true}
+              basis="1/3"
             >
-              <Form onSubmit={this.handleSubmit}>
-                <FormField label="Name" error={this.state.nameErr}>
-                  <TextInput
-                    size="large"
-                    type="text"
-                    required={true}
-                    placeholder="enter your name"
-                    value={this.state.name}
-                    onChange={this.captureName}
-                  />
-                </FormField>
-                <FormField label="Company" error={this.state.companyErr}>
-                  <TextInput
-                    type="text"
-                    required={true}
-                    placeholder="enter your company name"
-                    value={this.state.company}
-                    onChange={this.captureCompany}
-                  />
-                </FormField>
-                <FormField label="Email" error={this.state.emailErr}>
-                  <TextInput
-                    type="text"
-                    required={true}
-                    placeholder="enter your company email"
-                    value={this.state.email}
-                    onChange={this.captureEmail}
-                  />
-                </FormField>
-                <FormField label="Workshops" error={this.state.notebookErr}>
-                  <Select
-                    options={["Grommet", "Nimble", "Simplivity", "RedFish"]}
-                    //required={true}
-                    placeholder="select a workshop(s)"
-                    icon={<Book />}
-                    closeOnChange={false}
-                    multiple={true}
-                    onChange={this.captureNotebook}
-                    value={this.state.notebookList}
-                    messages={{ multiple: this.state.notebookList }}
-                  />
-                </FormField>
-                <FormField label="Booking period" error={this.state.bookingErr}>
-                  <Calendar
-                    daysOfWeek={true}
-                    range={true}
-                    size="small"
-                    required={true}
-                    disabled={this.state.bookingPeriodDisable}
-                    animate={false}
-                    value={this.state.bookingPeriod}
-                    onSelect={this.captureBookingPeriod}
-                  />
-                </FormField>
-                <Box
-                  align="start"
-                  justify="center"
-                  direction="row-responsive"
-                  gap="medium"
-                  pad="small"
-                >
-                  <Button
-                    label="Submit"
-                    type="submit"
-                    hoverIndicator={true}
-                    primary={true}
-                    reverse={false}
-                    active={false}
-                  />
-                </Box>
-              </Form>
+              <Text>Stay in the loop</Text>
+              <Heading
+                level="4"
+                textAlign="center"
+                size="small"
+                truncate={false}
+              >
+                Sign up for the HPE Developer Newsletter
+              </Heading>
+              <Anchor
+                href="https://developer.hpe.com/newsletter-signup"
+                target="_blank"
+              >
+                 
+                <Button label="Subscribe Now" primary={true} />
+              </Anchor>
             </Box>
             <Box
               align="center"
               justify="center"
               direction="column"
-              fill={true}
+              overflow="auto"
               flex={true}
-              round="medium"
+              basis="1/3"
             >
-              <Image src="/img/gremlin-rockin.svg" />
+              <Text>Build with us</Text>
+              <Heading
+                level="4"
+                size="small"
+                textAlign="center"
+                truncate={false}
+                margin="medium"
+              >
+                Contribute to the HPE Developer blog
+              </Heading>
+              <Anchor href="https://developer.hpe.com/signup" target="_blank">
+                 
+                <Button label="Contribute" primary={true} />
+              </Anchor>
             </Box>
-          </Box>
-          <Box
-            align="stretch"
-            justify="center"
-            direction="column"
-            alignSelf="center"
-            wrap={false}
-            flex={false}
-          >
             <Box
               align="center"
               justify="center"
-              direction="row"
-              wrap={false}
+              direction="column"
+              overflow="auto"
               flex={true}
-              fill="horizontal"
-              pad="medium"
+              basis="1/3"
             >
-              <Box
-                align="center"
-                justify="center"
-                direction="column"
-                wrap={true}
-                flex={true}
-                basis="1/3"
+              <Text>Connect and code</Text>
+              <Heading
+                level="4"
+                size="small"
+                textAlign="center"
+                truncate={false}
+                margin="medium"
               >
-                <Text>Stay in the loop</Text>
-                <Heading
-                  level="4"
-                  textAlign="center"
-                  size="small"
-                  truncate={false}
-                >
-                  Sign up for the HPE Developer Newsletter
-                </Heading>
-                <Anchor
-                  href="https://developer.hpe.com/newsletter-signup"
-                  target="_blank"
-                >
-                   
-                  <Button label="Subscribe Now" primary={true} />
-                </Anchor>
-              </Box>
-              <Box
-                align="center"
-                justify="center"
-                direction="column"
-                overflow="auto"
-                flex={true}
-                basis="1/3"
-              >
-                <Text>Build with us</Text>
-                <Heading
-                  level="4"
-                  size="small"
-                  textAlign="center"
-                  truncate={false}
-                  margin="medium"
-                >
-                  Contribute to the HPE Developer blog
-                </Heading>
-                <Anchor href="https://developer.hpe.com/signup" target="_blank">
-                   
-                  <Button label="Contribute" primary={true} />
-                </Anchor>
-              </Box>
-              <Box
-                align="center"
-                justify="center"
-                direction="column"
-                overflow="auto"
-                flex={true}
-                basis="1/3"
-              >
-                <Text>Connect and code</Text>
-                <Heading
-                  level="4"
-                  size="small"
-                  textAlign="center"
-                  truncate={false}
-                  margin="medium"
-                >
-                  Join the HPE Developer Slack Community
-                </Heading>
-                <Anchor href="https://slack.hpedev.io/" target="_blank">
-                   
-                  <Button label="Join Now" primary={true} />
-                </Anchor>
-              </Box>
+                Join the HPE Developer Slack Community
+              </Heading>
+              <Anchor href="https://slack.hpedev.io/" target="_blank">
+                 
+                <Button label="Join Now" primary={true} />
+              </Anchor>
             </Box>
           </Box>
         </Box>
-      </Grommet>
-    );
-  }
+      </Box>
+    </Grommet>
+  );
 }
 export default App;
