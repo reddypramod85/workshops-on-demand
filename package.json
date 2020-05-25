@@ -1,25 +1,25 @@
 {
-  "name": "notebook_on_demand",
+  "name": "workshops-on-demand",
   "version": "1.0.0",
-  "description": "HPEDEV Hack Shack Notebooks On Demand",
+  "description": "HPEDEV Hack Shack Workshops On Demand",
   "main": "index.js",
   "scripts": {
-    "client": "cd client && npm install && npm start",
+    "client": "cd client && yarn install && yarn start",
     "server": "cd server && npm install && npm start",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "build": "cd server && npm install && npm start && cd client && npm install && npm start"
+    "build": "cd server && npm install && npm start && cd client && yarn install && yarn start"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/reddypramod85/notebook_on_demand.git"
+    "url": "git+https://github.com/reddypramod85/workshops-on-demand.git"
   },
   "keywords": [],
   "author": "Pramod Sareddy",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/reddypramod85/notebook_on_demand/issues"
+    "url": "https://github.com/reddypramod85/workshops-on-demand/issues"
   },
-  "homepage": "https://github.com/reddypramod85/notebook_on_demand#readme",
+  "homepage": "https://github.com/reddypramod85/workshops-on-demand#readme",
   "devDependencies": {
     "concurrently": "^5.1.0"
   }
