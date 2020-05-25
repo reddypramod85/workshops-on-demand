@@ -1,5 +1,5 @@
 {
-  "name": "notebook_on_demand",
+  "name": "workshops-on-demand",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -7,18 +7,25 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "axios": "^0.19.2",
-    "grommet": "^2.11.2",
+    "dotenv": "^8.2.0",
+    "grommet": "https://github.com/grommet/grommet/tarball/stable",
     "grommet-icons": "^4.4.0",
+    "grommet-theme-hpe": "https://github.com/grommet/grommet-theme-hpe/tarball/NEXT-stable",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",
     "styled-components": "^5.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "docker:build": "docker build -t workshops_on_demand_client .",
+    "docker:clean": "docker rm -f workshops_on_demand_client || true",
+    "docker:run": "docker run -it -p 3000:3000 --name workshops_on_demand_client workshops_on_demand_client",
+    "docker:stop": "docker stop workshops_on_demand_client",
+    "docker:start": "docker start workshops_on_demand_client && yarn run docker:logs",
+    "docker:logs": "docker logs -f workshops_on_demand_client"
   },
   "eslintConfig": {
     "extends": "react-app"
